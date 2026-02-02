@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singleton Task Queue Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Animaciones suaves */
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Estilo para la barra de progreso simulada */
+        .loading-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #ec4899);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">
+                <i class="fas fa-layer-group text-indigo-600 mr-2"></i>Gestor Singleton FIFO
+            </h1>
+            <p class="text-slate-600">Procesamiento secuencial de promesas en JS Puro</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Panel de Control -->
+            <div class="card-glass rounded-2xl shadow-xl p-6 h-fit">
+                <h2 class="text-xl font-semibold mb-4 border-b pb-2 border-slate-200">
+                    <i class="fas fa-gamepad mr-2 text-indigo-500"></i>Controles
+                </h2>
+                
+                <p class="text-sm text-slate-500 mb-4">Simula tareas desde diferentes partes de tu aplicativo. Cada botón añade un objeto a la cola única.</p>
+
+                <div class="space-y-3">
+                    <button onclick="simularPeticionExterna('Rápida', 1000, 'bg-emerald-100 border-emerald-500')" 
+                        class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:bg-emerald-50 hover:border-emerald-300 transition shadow-sm group">
+                        <span class="font-medium text-slate-700 group-hover:text-emerald-700">Agregar Tarea Rápida (1s)</span>
+                        <i class="fas fa-bolt text-emerald-400"></i>
+                    </button>
+
+                    <button onclick="simularPeticionExterna('Pesada', 3000, 'bg-amber-100 border-amber-500')" 
+                        class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:bg-amber-50 hover:border-amber-300 transition shadow-sm group">
+                        <span class="font-medium text-slate-700 group-hover:text-amber-700">Agregar Tarea Pesada (3s)</span>
+                        <i class="fas fa-hourglass-half text-amber-400"></i>
+                    </button>
+
+                    <button onclick="simularPeticionExterna('Crítica', 5000, 'bg-rose-100 border-rose-500')" 
+                        class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:bg-rose-50 hover:border-rose-300 transition shadow-sm group">
+                        <span class="font-medium text-slate-700 group-hover:text-rose-700">Agregar Tarea Crítica (5s)</span>
+                        <i class="fas fa-exclamation-circle text-rose-400"></i>
+                    </button>
+                </div>
+
+                <div class="mt-6 p-4 bg-slate-50 rounded-lg text-xs text-slate-500 border border-slate-200">
+                    <strong>Nota Técnica:</strong> Aunque hagas clic en los botones simultáneamente, el Singleton asegura que se ejecuten una tras otra.
+                </div>
+            </div>
+
+            <!-- Visualizador de Estado -->
+            <div class="space-y-6">
+                <!-- Estado Actual -->
+                <div class="card-glass rounded-2xl shadow-xl p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex justify-between items-center">
+                        <span><i class="fas fa-microchip mr-2 text-blue-500"></i>Procesador</span>
+                        <span id="status-badge" class="px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-full font-bold uppercase tracking-wide">Inactivo</span>
+                    </h2>
+
+                    <div id="current-task-container" class="hidden text-center py-6">
+                        <div class="mb-2 text-lg font-medium text-slate-800" id="current-task-name">Procesando datos...</div>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                            <div id="progress-bar" class="loading-bar"></div>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400">Por favor espere...</div>
+                    </div>
+
+                    <div id="idle-message" class="text-center py-8 text-slate-400">
+                        <i class="fas fa-bed text-4xl mb-2 opacity-50"></i>
+                        <p>Esperando tareas...</p>
+                    </div>
+                </div>
+
+                <!-- Cola Pendiente -->
+                <div class="card-glass rounded-2xl shadow-xl p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex justify-between items-center">
+                        <span><i class="fas fa-list-ol mr-2 text-purple-500"></i>En Cola</span>
+                        <span id="queue-count" class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-sm font-bold">0</span>
+                    </h2>
+                    
+                    <ul id="queue-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Items de cola inyectados por JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consola de Logs -->
+        <div class="bg-slate-900 text-emerald-400 p-4 rounded-xl shadow-inner font-mono text-sm h-48 overflow-y-auto border border-slate-700" id="console-output">
+            <div class="text-slate-500">System initialized. TaskRunner Singleton ready...</div>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        /**
+         * CLASE SINGLETON TASK RUNNER
+         * Esta es la pieza central que solicitaste.
+         */
+        class TaskRunner {
+            constructor() {
+                // Lógica Singleton: Si ya existe una instancia, la devuelve.
+                if (TaskRunner.instance) {
+                    console.warn("TaskRunner ya existe. Devolviendo la instancia existente.");
+                    return TaskRunner.instance;
+                }
+
+                // Inicialización de propiedades
+                this.queue = [];           // Array de objetos (tareas)
+                this.isProcessing = false; // "Interruptor"
+                
+                // Guardamos la referencia estática
+                TaskRunner.instance = this;
+            }
+
+            /**
+             * Método público para agregar tareas desde cualquier script.
+             * @param {Object} task - Objeto con configuración { id, name, action: () => Promise }
+             */
+            add(task) {
+                this.queue.push(task);
+                logToConsole(`[COLA] Tarea agregada: "${task.name}" (ID: ${task.id}). Posición: ${this.queue.length}`);
+                updateUIQueue();
+
+                // Si el interruptor está apagado (no procesando), arrancamos.
+                if (!this.isProcessing) {
+                    this.processNext();
+                }
+            }
+
+            /**
+             * Método interno recursivo para procesar FIFO.
+             */
+            async processNext() {
+                // Caso base: Si no hay nada en cola, apagamos el interruptor.
+                if (this.queue.length === 0) {
+                    this.isProcessing = false;
+                    updateUIStatus(false);
+                    logToConsole("[SISTEMA] Cola vacía. Esperando nuevas instrucciones.");
+                    return;
+                }
+
+                // Encendemos el interruptor
+                this.isProcessing = true;
+                
+                // Obtenemos el primer elemento (FIFO) y lo sacamos del array
+                const currentTask = this.queue.shift();
+                
+                updateUIQueue(); // Actualizar lista visual
+                updateUIStatus(true, currentTask); // Mostrar spinner/progreso
+                
+                logToConsole(`[EJECUTANDO] Iniciando: "${currentTask.name}"...`);
+
+                try {
+                    // EJECUCIÓN: Esperamos a que la promesa/timer del objeto se resuelva
+                    await currentTask.action();
+                    
+                    logToConsole(`[ÉXITO] Tarea "${currentTask.name}" finalizada correctamente.`);
+                } catch (error) {
+                    logToConsole(`[ERROR] Falló la tarea "${currentTask.name}": ${error}`);
+                } finally {
+                    // IMPORTANTE: Recursividad. Llamamos al siguiente sin importar éxito o error.
+                    this.processNext();
+                }
+            }
+        }
+
+        // Instanciamos el Singleton globalmente
+        // window.appTaskRunner permitirá acceso desde "otros scripts" simulados
+        const taskRunner = new TaskRunner();
+        // Opcional: Congelar para evitar modificaciones accidentales
+        Object.freeze(taskRunner); 
+
+
+        /* ==========================================
+           LÓGICA DE UI Y DEMOSTRACIÓN (NO PARTE DEL CORE)
+           ========================================== */
+        
+        // Función auxiliar para generar IDs únicos
+        const generateId = () => Math.random().toString(36).substr(2, 9);
+
+        // Función auxiliar para esperar (Simula el temporizador o fetch)
+        const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Animación de barra de progreso (Solo visual)
+        function animateProgressBar(duration) {
+            const bar = document.getElementById('progress-bar');
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            
+            // Forzar reflow
+            void bar.offsetWidth; 
+
+            bar.style.transition = `width ${duration}ms linear`;
+            bar.style.width = '100%';
+        }
+
+        // Función llamada por los botones HTML
+        function simularPeticionExterna(tipo, duracion, claseColor) {
+            const id = generateId();
+            
+            // Creamos el objeto tarea.
+            // 'action' es la función que retorna la Promesa.
+            const nuevaTarea = {
+                id: id,
+                name: `Proceso ${tipo}`,
+                colorClass: claseColor, // Dato extra para la UI
+                action: async () => {
+                    // Aquí iría tu fetch real o lógica compleja
+                    animateProgressBar(duracion);
+                    await wait(duracion); 
+                    return `Resultado de ${id}`;
+                }
+            };
+
+            // INVOCACIÓN AL SINGLETON
+            // Observa que si hago new TaskRunner().add(...) funcionaría igual porque devuelve la misma instancia
+            new TaskRunner().add(nuevaTarea);
+        }
+
+        /* --- Actualizaciones del DOM --- */
+
+        function updateUIStatus(isProcessing, task = null) {
+            const badge = document.getElementById('status-badge');
+            const idleContainer = document.getElementById('idle-message');
+            const activeContainer = document.getElementById('current-task-container');
+            const taskNameLabel = document.getElementById('current-task-name');
+
+            if (isProcessing && task) {
+                badge.textContent = "Procesando";
+                badge.className = "px-3 py-1 bg-indigo-500 text-white text-xs rounded-full font-bold uppercase tracking-wide animate-pulse";
+                
+                idleContainer.classList.add('hidden');
+                activeContainer.classList.remove('hidden');
+                
+                taskNameLabel.textContent = task.name;
+                
+            } else {
+                badge.textContent = "Inactivo";
+                badge.className = "px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-full font-bold uppercase tracking-wide";
+                
+                idleContainer.classList.remove('hidden');
+                activeContainer.classList.add('hidden');
+            }
+        }
+
+        function updateUIQueue() {
+            // Accedemos a la instancia directamente para leer la cola
+            const currentQueue = new TaskRunner().queue;
+            const list = document.getElementById('queue-list');
+            const count = document.getElementById('queue-count');
+            
+            count.textContent = currentQueue.length;
+            list.innerHTML = '';
+
+            currentQueue.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = `p-3 rounded-lg border border-slate-200 bg-white text-sm flex items-center justify-between fade-in shadow-sm`;
+                li.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="w-6 h-6 rounded-full ${task.colorClass || 'bg-gray-200'} flex items-center justify-center text-xs mr-3 font-bold opacity-80">
+                            ${index + 1}
+                        </span>
+                        <span class="font-medium text-slate-700">${task.name}</span>
+                    </div>
+                    <i class="fas fa-clock text-slate-300"></i>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function logToConsole(msg) {
+            const consoleDiv = document.getElementById('console-output');
+            const time = new Date().toLocaleTimeString();
+            const p = document.createElement('div');
+            p.className = "mb-1 border-b border-slate-800 pb-1";
+            p.innerHTML = `<span class="opacity-50 text-xs">[${time}]</span> ${msg}`;
+            consoleDiv.appendChild(p);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>

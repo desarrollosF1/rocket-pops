@@ -1,0 +1,130 @@
+.modal-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-image{
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.card-container{
+    max-width: 98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ffef1400;
+    overflow: hidden;
+    inset:  auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    box-sizing: border-box;
+    transition: ease-out 0.4s;
+    animation: slideup 0.3s ease-out;
+}
+
+.button-dismiss{
+    position: absolute;
+    top: .21vw;
+    right: .21vw;
+    background-color: #ff5c5c;
+    color: white;
+    border: transparent 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: content-box;
+    transition: ease-out 0.2s;
+}
+
+.button-dismiss:hover{
+    background-color: #ff461c;
+    border: #f4bfbf 1px solid;
+}
+
+.actions-container{
+    display: flex;
+}
+
+.button-action{
+    font-size: .65rem;
+    width: 100%;
+    padding: .4rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: transparent 1px solid;
+    border-radius: none;
+    box-shadow: none;
+    transition: ease-out 0.2s;
+}
+
+.button-action:hover{
+    filter: brightness(0.75) saturate(1.3);
+}
+
+.button-action.cancel{
+    background-color: #ff5c5c;
+    color: white;
+    border: #ff5c5c 1px solid;
+}
+
+.button-action.confirm{
+    background-color: #0cd838;
+    color: white;
+    border: #0cd838 1px solid;
+}
+
+.button-action.ignore{
+    background-color: #b4b4b4;
+    color: rgb(74, 115, 134);
+    border: #a8a8a8 1px solid;
+}
+
+.actions-container.gap {
+    gap: 10px;
+    padding: 10px;
+}
+
+.resource-container{
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/**
+* animacion de slideup
+*/
+@keyframes slideup {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slidedown {
+    0% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
