@@ -1,19 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="src/styles/main.css">
-    <title>Document</title>
-</head>
-<body>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati officiis aut ratione porro possimus et eos repudiandae, voluptates beatae, ipsa quod! Perferendis pariatur natus nesciunt consequuntur ex, architecto totam in!
-    Amet illo laborum corrupti numquam autem illum animi enim deleniti rem dolore? Possimus in nemo fugiat optio rerum illum. Quas voluptatum error laborum officia et eligendi doloribus aliquam voluptatibus quibusdam?
-    Accusamus, ut quas. Cumque, aspernatur. Laboriosam porro quisquam, dolorem beatae ullam labore commodi reiciendis sequi magnam quos qui voluptatem ut nemo mollitia non alias dolores debitis natus velit quasi ducimus?
-    Enim nemo facilis cum quam, iste similique accusamus hic sed autem quod, eveniet quis. Quia laudantium odit numquam nam reiciendis sequi! Ea at excepturi sapiente aspernatur ullam similique omnis vitae.
-    Reprehenderit veritatis atque corporis eligendi facilis molestiae excepturi, iusto accusantium quasi perspiciatis voluptatibus consequatur suscipit? Qui, asperiores earum, vero a consectetur, neque cum magnam est nam quae dicta quod ut.
-    <!-- axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="src/index.js"></script>
-</body>
-</html>
+<style>
+.rp-modal-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 7899;
+}
+
+.rp-popup-image{
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.rp-card-container{
+    max-width: 98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #2a393ebd;
+    overflow: hidden;
+    inset:  auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    box-sizing: border-box;
+    transition: ease-out 0.4s;
+    animation: slideup 0.3s ease-out;
+}
+
+.rp-button-dismiss{
+    position: absolute;
+    top: .21vw;
+    right: .21vw;
+    background-color: #ff5c5c;
+    color: white;
+    border: transparent 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: content-box;
+    transition: ease-out 0.2s;
+}
+
+.rp-button-dismiss:hover{
+    background-color: #ff461c;
+    border: #f4bfbf 1px solid;
+}
+
+.rp-actions-container{
+    display: flex;
+}
+
+.rp-button-action{
+    font-size: 1.2rem;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: transparent 1px solid;
+    border-radius: none;
+    box-shadow: none;
+    transition: ease-out 0.2s;
+}
+
+.rp-button-action:hover{
+    filter: brightness(0.75) saturate(1.3);
+}
+
+.rp-button-action.cancel{
+    background-color: #ff5c5c;
+    color: white;
+    border: #ff5c5c 1px solid;
+}
+
+.rp-button-action.confirm{
+    background-color: #0cd838;
+    color: white;
+    border: #0cd838 1px solid;
+}
+
+.rp-button-action.ignore{
+    background-color: #b4b4b4;
+    color: rgb(74, 115, 134);
+    border: #a8a8a8 1px solid;
+}
+
+.rp-actions-container.gap {
+    gap: 10px;
+    padding: 10px;
+}
+
+.rp-resource-container{
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/**
+* animacion de slideup
+*/
+@keyframes slideup {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slidedown {
+    0% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Modal message alerts */
+.rp-modal-container-alert{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 7900;
+}
+
+.rp-card-container-alert{
+    max-width: 98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ffef1400;
+    overflow: hidden;
+    inset:  auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    box-sizing: border-box;
+    transition: ease-out 0.4s;
+    animation: slideup 0.3s ease-out;
+}
+</style>
+
+<div class="rp-modal-container" id="modal-event-card-container">
+      <div class="rp-card-container">
+        <button class="rp-button-dismiss">x</button>
+        <div class="rp-resource-container">
+            <img id="popup-image-id" class="rp-popup-image" src="" alt="">
+        </div>
+        <div class="rp-actions-container">
+            <button id="cancel-button-id" class="rp-button-action cancel">Cancelar</button>
+            <button id="confirm-button-id" class="rp-button-action confirm">Confirmar</button>
+        </div>
+      </div>
+    </div>
