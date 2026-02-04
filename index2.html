@@ -10,7 +10,7 @@
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 7899;
+    z-index: 999789900;
 }
 
 .rp-popup-image{
@@ -60,7 +60,7 @@
 }
 
 .rp-button-action{
-    font-size: 1.2rem;
+    font-size: .71rem;
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
@@ -85,6 +85,7 @@
     background-color: #0cd838;
     color: white;
     border: #0cd838 1px solid;
+    font-weight: 900;
 }
 
 .rp-button-action.ignore{
@@ -141,7 +142,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 7900;
+    z-index: 999789901;
 }
 
 .rp-card-container-alert{
@@ -160,8 +161,8 @@
 </style>
 
 <div class="rp-modal-container" id="modal-event-card-container">
-      <div class="rp-card-container">
-        <button class="rp-button-dismiss">x</button>
+    <div class="rp-card-container" id="modal-card-container">
+        <button id="close-button-id" class="rp-button-dismiss">x</button>
         <div class="rp-resource-container">
             <img id="popup-image-id" class="rp-popup-image" src="" alt="">
         </div>
@@ -169,5 +170,5 @@
             <button id="cancel-button-id" class="rp-button-action cancel">Cancelar</button>
             <button id="confirm-button-id" class="rp-button-action confirm">Confirmar</button>
         </div>
-      </div>
     </div>
+</div>
