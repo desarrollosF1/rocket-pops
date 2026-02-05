@@ -1,0 +1,246 @@
+.rp-modal-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999789900;
+}
+
+.rp-popup-image{
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    display: none;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.rp-popup-video{
+    width: 1000px;
+    max-width: 1500px;
+    height: 1000px;
+    max-height: 75vh;
+    display: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.rp-card-container{
+    max-width: 98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #2a393ebd;
+    overflow: hidden;
+    inset:  auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    box-sizing: border-box;
+    transition: ease-out 0.4s;
+    animation: slideup 0.3s ease-out;
+}
+
+.rp-button-dismiss{
+    position: absolute;
+    top: .21vw;
+    right: .21vw;
+    background-color: #ff5c5c;
+    color: white;
+    border: transparent 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: content-box;
+    transition: ease-out 0.2s;
+}
+
+.rp-button-dismiss:hover{
+    background-color: #ff461c;
+    border: #f4bfbf 1px solid;
+}
+
+.rp-actions-container{
+    display: flex;
+}
+
+.rp-button-action{
+    font-size: 1rem;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: transparent 1px solid;
+    border-radius: none;
+    box-shadow: none;
+    transition: ease-out 0.2s;
+}
+
+.rp-button-action:hover{
+    filter: brightness(0.75) saturate(1.3);
+}
+
+.rp-button-action.cancel{
+    background-color: #ff5c5c;
+    color: white;
+    border: #ff5c5c 1px solid;
+}
+
+.rp-button-action.confirm{
+    background-color: #0cd838;
+    color: white;
+    border: #0cd838 1px solid;
+    font-weight: 900;
+}
+
+.rp-button-action.ignore{
+    background-color: #b4b4b4;
+    color: rgb(74, 115, 134);
+    border: #a8a8a8 1px solid;
+}
+
+.rp-actions-container.gap {
+    gap: 10px;
+    padding: 10px;
+}
+
+.rp-resource-container{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/**
+* animacion de slideup
+*/
+@keyframes slideup {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slidedown {
+    0% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Modal message alerts */
+.rp-modal-container-alert{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999789901;
+}
+
+.rp-card-container-alert{
+    max-width: 98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ffef1400;
+    overflow: hidden;
+    inset:  auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    box-sizing: border-box;
+    transition: ease-out 0.4s;
+    animation: slideup 0.3s ease-out;
+}
+
+:root {
+  --primary-color: #ff9d00;
+  --bg-dark: #ffffff;
+
+
+}
+
+.loader-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.elegant-loader {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ring {
+  width: 80px;
+  height: 80px;
+  border: 0.5rem solid transparent;
+  border-top: 0.5rem solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  top: 5px; left: 5px; right: 5px; bottom: 5px;
+  border: 0.5rem solid transparent;
+  border-top: 0.5rem solid var(--bg-);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20px;
+  color: #040404;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Clase para ocultarlo con suavidad */
+.loader-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
