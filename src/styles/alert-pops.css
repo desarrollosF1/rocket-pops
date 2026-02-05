@@ -172,9 +172,8 @@
 
 :root {
   --primary-color: #ff9d00;
-  --bg-dark: #ffffff;
-
-
+  --bg-loader: #ffffff;
+  --bg-inner-ring: #003385;
 }
 
 .loader-wrapper {
@@ -183,7 +182,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-dark);
+  background: var(--bg-loader);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -213,7 +212,7 @@
   position: absolute;
   top: 5px; left: 5px; right: 5px; bottom: 5px;
   border: 0.5rem solid transparent;
-  border-top: 0.5rem solid var(--bg-);
+  border-top: 0.5rem solid var(--bg-inner-ring);
   border-radius: 50%;
   animation: spin 2s linear infinite;
 }
